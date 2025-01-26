@@ -1,0 +1,18 @@
+---
+- name: Configure neovim
+  block:
+    - name: Ensure config folder exists
+      ansible.builtin.file:
+        path: "{{ neovim_config_dir }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+
+    - name: Add neovim configuration
+      ansible.builtin.copy:
+        src: "{{ role_path }}/files/"
+        dest: "{{ neovim_config_dir }}"
+        mode: "0755"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
