@@ -1,0 +1,5 @@
+---
+neovim_dep_pkgs: []
+
+neovim_distro_pkgs:
+  - neovim
