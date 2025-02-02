@@ -1,0 +1,6 @@
+---
+# TODO: Fix idempotency here
+- name: Ensure Mason is updated
+  ansible.builtin.command:
+    cmd: "nvim --headless -c 'MasonUpdate' -c 'qall'"
+  changed_when: false

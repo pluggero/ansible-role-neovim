@@ -1,0 +1,30 @@
+---
+- name: Uninstall neovim from source
+  block:
+    - name: Find existing neovim folder in {{ neovim_install_dir }}
+      ansible.builtin.find:
+        paths: "{{ neovim_install_dir }}"
+        patterns: "neovim-*"
+        file_type: directory
+      register: neovim_install_folder
+
+    - name: Remove existing neovim installation folder
+      ansible.builtin.file:
+        path: "{{ folder.path }}"
+        state: absent
+      loop: "{{ neovim_install_folder.files }}"
+      loop_control:
+        loop_var: folder
+      become: true
+
+    - name: Remove neovim symlink
+      ansible.builtin.file:
+        path: "/usr/local/bin/neovim"
+        state: absent
+      become: true
+
+    - name: Remove neovim desktop file symlink
+      ansible.builtin.file:
+        path: "/usr/local/share/applications/nvim.desktop"
+        state: absent
+      become: true
