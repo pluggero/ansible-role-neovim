@@ -1,0 +1,33 @@
+---
+- name: Ensure we are using pacman
+  ansible.builtin.fail:
+    msg: "This role only supports {{ ansible_os_family }} systems that use pacman as a package manager."
+  when: ansible_pkg_mgr != "pacman"
+
+- name: Checks neovim version in package manager
+  when: ansible_pkg_mgr == "pacman"
+  block:
+    - name: Update pacman cache
+      community.general.pacman:
+        update_cache: true
+      become: true
+
+    - name: Get neovim version from package manager
+      ansible.builtin.command:
+        cmd: "pacman -Si {{ neovim_distro_pkgs[0] }}"
+      changed_when: false
+      failed_when: false
+      ignore_errors: true
+      register: neovim_pkg_mgr_version_cmd
+
+    - name: Debug output
+      ansible.builtin.debug:
+        var: neovim_pkg_mgr_version_cmd
+
+    - name: Extract only the version into a variable
+      ansible.builtin.set_fact:
+        neovim_pkg_mgr_version: "{{ (neovim_pkg_mgr_version_cmd.stdout | regex_search('Version.*?([\\d\\.]+)', '\\1', multiline=True))[0] }}"
+
+    - name: Debug neovim version from package manager
+      ansible.builtin.debug:
+        var: neovim_pkg_mgr_version

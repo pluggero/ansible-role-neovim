@@ -1,3 +1,13 @@
 ---
 neovim_config_dir: "{{ ansible_env.HOME }}/.config/nvim"
-neovim_install_method: "package"
+
+neovim_version: "0.10.3"
+neovim_install_method: "dynamic"
+neovim_force_install: false
+
+neovim_download_url: "https://github.com/neovim/neovim/releases/download/v{{ neovim_version }}/{{ neovim_archive_name }}.tar.gz"
+neovim_download_checksum: "sha256:{{ neovim_download_url }}.sha256sum"
+neovim_download_dir: "/tmp"
+
+neovim_install_dir: "/opt/"
+neovim_install_path: "{{ neovim_install_dir }}/neovim-{{ neovim_version }}"

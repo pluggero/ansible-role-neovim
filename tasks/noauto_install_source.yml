@@ -1,0 +1,91 @@
+---
+- name: Install neovim from source
+  block:
+    - name: Import installed neovim version check
+      ansible.builtin.include_tasks: noauto_check_installed_version.yml
+      when: neovim_installed_version is not defined
+
+    - name: Force install if the version numbers do not match
+      ansible.builtin.set_fact:
+        neovim_force_install: true
+      when:
+        - neovim_installed_version is defined
+        - neovim_installed_version != neovim_version
+
+    - name: Install neovim from source
+      when: neovim_installed_version is not defined or neovim_force_install
+      block:
+        - name: Uninstall current neovim installation
+          ansible.builtin.include_tasks: noauto_uninstall.yml
+
+        - name: Determine neovim archive name based on version
+          ansible.builtin.set_fact:
+            neovim_archive_name: >-
+              {{ 'nvim-linux64' if neovim_version is version('0.10.4', '<') else 'nvim-linux-x86_64' }}
+
+        - name: Download neovim package
+          ansible.builtin.get_url:
+            url: "{{ neovim_download_url }}"
+            dest: "{{ neovim_download_dir }}"
+            checksum: "{{ neovim_download_checksum }}"
+            mode: "0755"
+            owner: root
+            group: root
+          become: true
+
+        - name: Ensure neovim installation folder exists
+          ansible.builtin.file:
+            path: "{{ neovim_install_path }}"
+            state: directory
+            mode: "0755"
+            owner: root
+            group: root
+          become: true
+
+        - name: Extract archive
+          ansible.builtin.unarchive:
+            src: "{{ neovim_download_dir }}/{{ neovim_archive_name }}.tar.gz"
+            dest: "{{ neovim_install_path }}"
+            remote_src: true
+            extra_opts: ["--strip-components=1"]
+            creates: "{{ neovim_install_path }}/bin/nvim"
+          become: true
+
+        - name: Create neovim symlink
+          ansible.builtin.file:
+            src: "{{ neovim_install_path }}/bin/nvim"
+            dest: "/usr/local/bin/nvim"
+            state: link
+            force: true
+            mode: "0755"
+            owner: root
+            group: root
+          become: true
+
+        - name: Remove archive
+          ansible.builtin.file:
+            path: "{{ neovim_download_dir }}/{{ neovim_archive_name }}.tar.gz"
+            state: absent
+          become: true
+
+    - name: Create desktop file
+      block:
+        - name: Ensure desktop file directory exists
+          ansible.builtin.file:
+            path: "/usr/local/share/applications"
+            state: directory
+            mode: "0755"
+            owner: root
+            group: root
+          become: true
+
+        - name: Create desktop file symlink
+          ansible.builtin.file:
+            src: "{{ neovim_install_path }}/share/applications/nvim.desktop"
+            dest: "/usr/local/share/applications/nvim.desktop"
+            state: link
+            force: true
+            mode: "0644"
+            owner: root
+            group: root
+          become: true

@@ -13,6 +13,24 @@ Requires an installation of netcoredbg.
 
 Available variables are listed below, along with default values (see `defaults/main.yml`):
 
+```yaml
+neovim_version: "x.x"
+```
+
+The version of neovim to install can be defined in the variable `neovim_version`.
+
+```yaml
+neovim_install_method: "dynamic"
+```
+
+The method used to install neovim can be defined in the variable `neovim_install_method`.
+The following methods are available:
+
+- `source`: Installs neovim from source
+- `package`: Installs neovim from the package manager of the distribution
+  - **NOTE**: This method installs the latest version available in the package manager and not the version defined in `neovim_version`.
+- `dynamic`: Installs neovim from package manager if available in the correct version, otherwise installs from source
+
 ## Dependencies
 
 None.

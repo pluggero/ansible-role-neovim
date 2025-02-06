@@ -1,4 +1,7 @@
 ---
+- name: Uninstall current neovim installation
+  ansible.builtin.include_tasks: noauto_uninstall.yml
+
 - name: Install neovim OS-specifically via package
   ansible.builtin.include_tasks: "{{ task_file }}"
   with_first_found:
