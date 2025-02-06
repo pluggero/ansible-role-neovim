@@ -1,5 +1,9 @@
 ---
-neovim_dep_pkgs: []
+neovim_dep_pkgs:
+  - git
+  - npm
+  - unzip
+  - python3-venv
 
 neovim_distro_pkgs:
   - neovim

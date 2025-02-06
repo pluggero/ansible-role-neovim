@@ -1,0 +1,48 @@
+---
+- name: Check if updates are needed
+  block:
+    - name: Check if update file exists
+      ansible.builtin.stat:
+        path: "{{ neovim_update_timestamp_file }}"
+      register: neovim_timestamp_stat
+
+    - name: Get current time
+      ansible.builtin.command:
+        cmd: date +%s
+      register: neovim_current_time
+      changed_when: false
+
+    - name: Get last update time (if exists)
+      ansible.builtin.command:
+        cmd: "cat {{ neovim_update_timestamp_file }}"
+      register: neovim_last_update_time
+      when: neovim_timestamp_stat.stat.exists
+      changed_when: false
+      ignore_errors: true
+
+    - name: Determine if update is needed
+      ansible.builtin.set_fact:
+        neovim_update_needed: "{{ (not neovim_timestamp_stat.stat.exists) or ((neovim_current_time.stdout | int - (neovim_last_update_time.stdout | default(0)) | int) > 28800) }}"
+
+- name: Install new plugin version
+  when: neovim_update_needed | bool
+  block:
+    - name: Ensure Lazy plugins are updated
+      ansible.builtin.command:
+        cmd: "nvim --headless '+Lazy! sync' +qa"
+      changed_when: true
+
+    - name: Ensure Mason is updated
+      ansible.builtin.command:
+        cmd: "nvim --headless '+MasonUpdate' +qa"
+      changed_when: true
+
+    - name: Ensure Mason tools are updated
+      ansible.builtin.command:
+        cmd: "nvim --headless '+MasonToolsUpdateSync' +qa"
+      changed_when: true
+
+    - name: Update timestamp file
+      ansible.builtin.shell:
+        cmd: "echo '{{ neovim_current_time.stdout }}' > {{ neovim_update_timestamp_file }}"
+      changed_when: true

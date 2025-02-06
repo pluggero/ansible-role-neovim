@@ -9,5 +9,6 @@ neovim_download_url: "https://github.com/neovim/neovim/releases/download/v{{ neo
 neovim_download_checksum: "sha256:{{ neovim_download_url }}.sha256sum"
 neovim_download_dir: "/tmp"
 
-neovim_install_dir: "/opt/"
+neovim_install_dir: "/opt"
 neovim_install_path: "{{ neovim_install_dir }}/neovim-{{ neovim_version }}"
+neovim_update_timestamp_file: "{{ neovim_config_dir }}/.last_update"
