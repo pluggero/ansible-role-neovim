@@ -20,10 +20,6 @@
       ignore_errors: true
       register: neovim_pkg_mgr_version_cmd
 
-    - name: Debug output
-      ansible.builtin.debug:
-        var: neovim_pkg_mgr_version_cmd
-
     - name: Extract only the version into a variable
       ansible.builtin.set_fact:
         neovim_pkg_mgr_version: "{{ (neovim_pkg_mgr_version_cmd.stdout | regex_search('Version.*?([\\d\\.]+)', '\\1', multiline=True))[0] }}"
