@@ -8,6 +8,7 @@ keymap.set("n", "<leader>nh", ":nohl<CR>", { desc = "Clear search highlights" })
 
 -- custom scripts
 keymap.set("n", "<leader>ss", ":%!sort -u --version-sort<CR>", { desc = "Sort the buffer removing duplicates" }) -- Sort the buffer removing duplicates
+keymap.set("v", "<leader>ss", ":!sort -u --version-sort<CR>", { desc = "Sort selection removing duplicates" })
 keymap.set(
 	"n",
 	"<leader>sg",
