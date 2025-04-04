@@ -1,5 +1,11 @@
 ---
+- name: Check if update is needed
+  ansible.builtin.include_tasks:
+    file: noauto_check_update_needed.yml
+  when: neovim_update_needed is not defined
+
 - name: Configure neovim
+  when: neovim_update_needed | bool
   block:
     - name: Ensure config folder exists
       ansible.builtin.file:
@@ -9,10 +15,22 @@
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
 
-    - name: Add neovim configuration
+    - name: Clone neovim config from repo
+      ansible.builtin.git:
+        repo: "{{ neovim_config_repo }}"
+        dest: "{{ neovim_download_dir }}/neovim-config"
+        version: "{{ neovim_config_repo_version }}"
+
+    - name: Copy neovim config from tmp folder
       ansible.builtin.copy:
-        src: "{{ role_path }}/files/"
+        src: "{{ neovim_download_dir }}/neovim-config/"
         dest: "{{ neovim_config_dir }}"
-        mode: "0755"
+        remote_src: true
         owner: "{{ ansible_user }}"
         group: "{{ ansible_user }}"
+        mode: "0755"
+
+    - name: Cleanup tmp folder
+      ansible.builtin.file:
+        path: "{{ neovim_download_dir }}/neovim-config"
+        state: absent

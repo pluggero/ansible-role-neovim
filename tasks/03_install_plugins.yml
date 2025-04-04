@@ -1,28 +1,8 @@
 ---
-- name: Check if updates are needed
-  block:
-    - name: Check if update file exists
-      ansible.builtin.stat:
-        path: "{{ neovim_update_timestamp_file }}"
-      register: neovim_timestamp_stat
-
-    - name: Get current time
-      ansible.builtin.command:
-        cmd: date +%s
-      register: neovim_current_time
-      changed_when: false
-
-    - name: Get last update time (if exists)
-      ansible.builtin.command:
-        cmd: "cat {{ neovim_update_timestamp_file }}"
-      register: neovim_last_update_time
-      when: neovim_timestamp_stat.stat.exists
-      changed_when: false
-      ignore_errors: true
-
-    - name: Determine if update is needed
-      ansible.builtin.set_fact:
-        neovim_update_needed: "{{ (not neovim_timestamp_stat.stat.exists) or ((neovim_current_time.stdout | int - (neovim_last_update_time.stdout | default(0)) | int) > 28800) }}"
+- name: Check if update is needed
+  ansible.builtin.include_tasks:
+    file: noauto_check_update_needed.yml
+  when: neovim_update_needed is not defined
 
 - name: Install new plugin version
   when: neovim_update_needed | bool
