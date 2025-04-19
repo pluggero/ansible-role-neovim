@@ -1,5 +1,6 @@
 {
   "extends": ["config:base"],
+  "schedule": ["every friday at 8:00"],
   "regexManagers": [
     {
       "fileMatch": ["^defaults/main\\.yml$"],
@@ -25,6 +26,16 @@
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "pluggero/ansible-role-lazygit",
       "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["pluggero/ansible-role-lazygit"],
+      "groupName": "Update pluggero/ansible-role-lazygit version"
+    },
+    {
+      "matchPackageNames": ["neovim/neovim"],
+      "groupName": "Update Neovim version"
     }
   ]
 }
