@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "regexManagers": [
+    {
+      "fileMatch": ["^defaults/main.yml$"],
+      "matchStrings": [
+        "neovim_version:\\s*\"?(?<currentValue>\\d+\\.\\d+\\.\\d+)\"?"
+      ],
+      "datasourceTemplate": "github-releases",
+      "packageNameTemplate": "neovim/neovim",
+      "versioningTemplate": "semver",
+      "depNameTemplate": "neovim",
+      "extractVersionTemplate": "{{currentValue}}"
+    }
+  ]
+}
