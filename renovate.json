@@ -1,6 +1,7 @@
 {
   "extends": ["config:base"],
-  "schedule": ["every friday at 8:00"],
+  "timezone": "Europe/Berlin",
+  "schedule": ["0 8 * * 5"],
   "regexManagers": [
     {
       "fileMatch": ["^defaults/main\\.yml$"],
