@@ -13,8 +13,8 @@
       "matchStrings": [
         "- name: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)"
       ],
-      "datasourceTemplate": "ansible-galaxy",
-      "depNameTemplate": "pluggero.lazygit",
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "pluggero/ansible-role-lazygit",
       "versioningTemplate": "semver"
     },
     {
@@ -22,8 +22,8 @@
       "matchStrings": [
         "- role: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)"
       ],
-      "datasourceTemplate": "ansible-galaxy",
-      "depNameTemplate": "pluggero.lazygit",
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "pluggero/ansible-role-lazygit",
       "versioningTemplate": "semver"
     }
   ]
