@@ -1,7 +1,5 @@
 {
-  "extends": ["config:base"],
-  "timezone": "Europe/Berlin",
-  "schedule": ["* 8 * * 5"],
+  "extends": ["config:best-practices"],
   "regexManagers": [
     {
       "fileMatch": ["^defaults/main\\.yml$"],
