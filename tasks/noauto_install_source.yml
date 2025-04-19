@@ -23,6 +23,52 @@
             neovim_archive_name: >-
               {{ 'nvim-linux64' if neovim_version is version('0.10.4', '<') else 'nvim-linux-x86_64' }}
 
+        - name: Determine neovim checksum based on version
+          block:
+            - name: Determine neovim checksum for < 0.11.0
+              when: neovim_version is version('0.11.0', '<')
+              ansible.builtin.set_fact:
+                neovim_download_checksum: "sha256:{{ neovim_download_url }}.sha256sum"
+
+            - name: Determine neovim checksum for >= 0.11.0
+              when: neovim_version is version('0.11.0', '>=')
+              block:
+                - name: Download checksum file
+                  ansible.builtin.get_url:
+                    url: "{{ neovim_download_base_url }}/shasum.txt"
+                    dest: "{{ neovim_download_dir }}/shasum.txt"
+                    mode: "0644"
+                    owner: root
+                    group: root
+                  become: true
+
+                - name: Extract checksum from file
+                  ansible.builtin.slurp:
+                    src: "{{ neovim_download_dir }}/shasum.txt"
+                  register: neovim_checksum_file
+
+                - name: Decode and extract checksum from slurped content
+                  ansible.builtin.set_fact:
+                    neovim_download_checksum: >-
+                      sha256:{{
+                        (neovim_checksum_file.content | b64decode).splitlines()
+                        | select('search', neovim_archive_name ~ '\.tar\.gz$')
+                        | map('split', ' ')
+                        | map('first')
+                        | list
+                        | first
+                      }}
+
+                - name: Remove checksum file
+                  ansible.builtin.file:
+                    path: "{{ neovim_download_dir }}/shasum.txt"
+                    state: absent
+                  become: true
+
+            - name: Debug checksum
+              ansible.builtin.debug:
+                msg: "Checksum for {{ neovim_archive_name }}: {{ neovim_download_checksum }}"
+
         - name: Download neovim package
           ansible.builtin.get_url:
             url: "{{ neovim_download_url }}"
