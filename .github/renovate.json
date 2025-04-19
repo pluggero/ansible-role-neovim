@@ -1,5 +1,5 @@
 {
-  "extends": ["config:best-practices"],
+  "extends": ["config:best-practices", ":disableRateLimiting"],
   "regexManagers": [
     {
       "fileMatch": ["^defaults/main\\.yml$"],
