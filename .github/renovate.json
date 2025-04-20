@@ -1,39 +1,19 @@
 {
-  "extends": [
-    "config:best-practices",
-    ":disableRateLimiting"
-  ],
+  "extends": ["config:best-practices", ":disableRateLimiting"],
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": [
-        "^defaults/main\\.yml$"
-      ],
-      "matchStrings": [
-        "neovim_version:\\s+\"(?<currentValue>[\\d\\.]+)\""
-      ],
+      "fileMatch": ["^defaults/main\\.yml$"],
+      "matchStrings": ["neovim_version:\\s+\"(?<currentValue>[\\d\\.]+)\""],
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "neovim/neovim",
       "versioningTemplate": "semver"
     },
     {
       "customType": "regex",
-      "fileMatch": [
-        "^requirements\\.yml$"
-      ],
+      "fileMatch": ["^requirements\\.yml$", "^meta/main\\.yml$"],
       "matchStrings": [
-        "- name: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)"
-      ],
-      "datasourceTemplate": "github-tags",
-      "depNameTemplate": "pluggero/ansible-role-lazygit",
-      "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "fileMatch": [
-        "^meta/main\\.yml$"
-      ],
-      "matchStrings": [
+        "- name: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)",
         "- role: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)"
       ],
       "datasourceTemplate": "github-tags",
@@ -43,15 +23,11 @@
   ],
   "packageRules": [
     {
-      "matchPackageNames": [
-        "pluggero/ansible-role-lazygit"
-      ],
+      "matchPackageNames": ["pluggero/ansible-role-lazygit"],
       "groupName": "Update pluggero/ansible-role-lazygit version"
     },
     {
-      "matchPackageNames": [
-        "neovim/neovim"
-      ],
+      "matchPackageNames": ["neovim/neovim"],
       "groupName": "Update Neovim version"
     }
   ]
