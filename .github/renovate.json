@@ -12,6 +12,16 @@
     },
     {
       "customType": "regex",
+      "fileMatch": ["^defaults/main\\.yml$"],
+      "matchStrings": [
+        "neovim_config_repo_version:\\s+\"(?<currentValue>[\\d\\.]+)\""
+      ],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "pluggero/neovim-config",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
       "fileMatch": ["^requirements\\.yml$", "^meta/main\\.yml$"],
       "matchStrings": [
         "- name: pluggero\\.lazygit\\s+version:\\s+(?<currentValue>[\\d\\.]+)",
@@ -26,6 +36,10 @@
     {
       "matchPackageNames": ["pluggero/ansible-role-lazygit"],
       "groupName": "Update pluggero/ansible-role-lazygit version"
+    },
+    {
+      "matchPackageNames": ["pluggero/neovim-config"],
+      "groupName": "Update Neovim Config version"
     },
     {
       "matchPackageNames": ["neovim/neovim"],
