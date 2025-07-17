@@ -7,8 +7,10 @@ neovim_version: "0.11.2"
 neovim_install_method: "dynamic"
 neovim_force_install: false
 
+neovim_github_api_url: "https://api.github.com/repos/neovim/neovim/releases/tags/v{{ neovim_version }}"
 neovim_download_base_url: "https://github.com/neovim/neovim/releases/download/v{{ neovim_version }}"
-neovim_download_url: "{{ neovim_download_base_url }}/{{ neovim_archive_name }}.tar.gz"
+neovim_download_url: "{{ neovim_download_base_url }}/{{ neovim_tarball_filename }}"
+neovim_tarball_filename: "{{ neovim_archive_name }}.tar.gz"
 neovim_download_dir: "/tmp"
 
 neovim_install_dir: "/opt"
