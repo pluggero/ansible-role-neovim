@@ -32,7 +32,7 @@
                 neovim_download_checksum: "sha256:{{ neovim_download_url }}.sha256sum"
 
             - name: Determine neovim checksum for >= 0.11.0
-              when: neovim_version is version('0.11.0', '>=')
+              when: neovim_version is version('0.11.0', '>=') and neovim_version is version('0.11.2', '<=')
               block:
                 - name: Download checksum file
                   ansible.builtin.get_url:
@@ -65,6 +65,30 @@
                     path: "{{ neovim_download_dir }}/shasum.txt"
                     state: absent
                   become: true
+
+            - name: Determine neovim checksum for > 0.11.2
+              when: neovim_version is version('0.11.2', '>')
+              block:
+                - name: Fetch release metadata from GitHub API
+                  ansible.builtin.uri:
+                    url: "{{ neovim_github_api_url }}"
+                    method: GET
+                    return_content: yes
+                    status_code: 200
+                    headers:
+                      Accept: "application/vnd.github+json"
+                      User-Agent: "ansible-neovim-role"
+                  register: neovim_github_release
+
+                - name: Parse GitHub release JSON and extract checksum
+                  vars:
+                    neovim_matching_asset: >-
+                      {{
+                        (neovim_github_release.json.assets | selectattr('name', 'equalto', neovim_tarball_filename) | list | first)
+                      }}
+                  ansible.builtin.set_fact:
+                    neovim_download_checksum: "{{ neovim_matching_asset.digest }}"
+                  when: neovim_matching_asset is defined
 
             - name: Debug checksum
               ansible.builtin.debug:
