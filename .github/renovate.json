@@ -1,6 +1,19 @@
 {
   "extends": ["config:best-practices", ":disableRateLimiting"],
-  "enabledManagers": ["github-actions", "pip_requirements", "regex"],
+  "automerge": false,
+  "automergeType": "pr",
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions", "pip_requirements"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchManagers": ["custom.regex", "ansible-galaxy"],
+      "automerge": false
+    }
+  ],
+  "enabledManagers": ["github-actions", "pip_requirements", "custom.regex", "ansible-galaxy"],
   "assignees": ["pluggero"],
   "customManagers": [
     {
@@ -31,20 +44,6 @@
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "pluggero/ansible-role-lazygit",
       "versioningTemplate": "semver"
-    }
-  ],
-  "packageRules": [
-    {
-      "matchPackageNames": ["pluggero/ansible-role-lazygit"],
-      "groupName": "Update pluggero/ansible-role-lazygit version"
-    },
-    {
-      "matchPackageNames": ["pluggero/neovim-config"],
-      "groupName": "Update Neovim Config version"
-    },
-    {
-      "matchPackageNames": ["neovim/neovim"],
-      "groupName": "Update Neovim version"
     }
   ]
 }
