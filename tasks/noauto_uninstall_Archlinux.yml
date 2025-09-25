@@ -13,6 +13,9 @@
 
     - name: Remove neovim if it is installed
       community.general.pacman:
-        name: "{{ neovim_distro_pkgs }}"
+        name: "{{ package }}"
         state: absent
+      loop: "{{ neovim_distro_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true
