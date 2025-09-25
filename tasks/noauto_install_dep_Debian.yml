@@ -15,6 +15,9 @@
 
     - name: Ensure neovim dependencies are installed
       ansible.builtin.apt:
-        name: "{{ neovim_dep_pkgs }}"
+        name: "{{ package }}"
         state: present
+      loop: "{{ neovim_dep_pkgs }}"
+      loop_control:
+        loop_var: package
       become: true
