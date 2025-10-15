@@ -4,6 +4,7 @@ neovim_dep_pkgs:
   - npm
   - unzip
   - python3-venv
+  - libreadline-dev
 
 neovim_distro_pkgs:
   - neovim
