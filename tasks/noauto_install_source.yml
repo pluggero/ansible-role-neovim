@@ -73,7 +73,7 @@
                   ansible.builtin.uri:
                     url: "{{ neovim_github_api_url }}"
                     method: GET
-                    return_content: yes
+                    return_content: true
                     status_code: 200
                     headers:
                       Accept: "application/vnd.github+json"
